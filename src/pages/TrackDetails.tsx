@@ -24,7 +24,7 @@ const TrackDetails = () => {
 
   const [track, setTrack] = useState<Track | null>(null);
   const [loading, setLoading] = useState(true);
-  const { playTrack } = usePlayer();
+  const { playTrack, togglePlay, currentTrack , isPlaying } = usePlayer();
 
   useEffect(() => {
     const fetchTrack = async () => {
@@ -48,6 +48,8 @@ const TrackDetails = () => {
   if (!track) {
     return <p className="text-white p-6">Track not found</p>;
   }
+
+  const isCurrentTrack = currentTrack?.preview === track.preview;
 
   return (
     <div className="min-h-screen text-white bg-gradient-to-b from-[#5038a0] via-[#181818] to-black">
@@ -91,16 +93,21 @@ const TrackDetails = () => {
           {/* PLAY BUTTON */}
           <button
             onClick={() => {
+              if(isCurrentTrack){
+                togglePlay();
+              }else{
               playTrack({
+                id: track.id,
                 title: track.title,
                 artist: track.artist.name,
                 cover: track.album.cover_big,
                 preview: track.preview,
               });
+            }
             }}
-            className="w-14 h-14 rounded-full bg-[#1ed760] hover:scale-105 transition flex items-center justify-center text-black text-2xl font-bold"
+            className="w-14 h-14 rounded-full bg-[#1ed760] hover:brightness-110 hover:scale-105 active:scale-95 transition flex items-center justify-center text-black text-2xl font-bold"
           >
-            ▶
+            {isCurrentTrack && isPlaying ? "❚❚" : "▶"}
           </button>
 
           {/* LIKE */}

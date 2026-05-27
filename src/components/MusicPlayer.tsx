@@ -1,9 +1,21 @@
 import { usePlayer } from "../context/PlayerContext";
-import Speaker from '../assets/speaker.png'
+import Speaker from "../assets/speaker.png";
+import Next from "../assets/next.png"
+import Prev from "../assets/prev.png"
 
 const MusicPlayer = () => {
-  const { currentTrack, isPlaying, togglePlay, currentTime, duration, seek,volume,setVolume } =
-    usePlayer();
+  const {
+    currentTrack,
+    isPlaying,
+    togglePlay,
+    currentTime,
+    duration,
+    seek,
+    volume,
+    setVolume,
+    nextTrack,
+    prevTrack,
+  } = usePlayer();
 
   if (!currentTrack) return null;
 
@@ -31,12 +43,38 @@ const MusicPlayer = () => {
 
       {/* CENTER */}
       <div className="flex flex-col items-center w-1/3 gap-2">
-        <button
+        {/* <button
           onClick={togglePlay}
           className="w-10 h-10 rounded-full bg-white text-black flex items-center justify-center font-bold"
         >
           {isPlaying ? "❚❚" : "▶"}
-        </button>
+        </button> */}
+
+        <div className="flex items-center gap-5">
+          {/* PREVIOUS */}
+          <button
+            onClick={prevTrack}
+            className="text-gray-400 hover:text-white text-xl"
+          >
+          <img src={Prev} alt="" className="w-6"/>
+          </button>
+
+          {/* PLAY / PAUSE */}
+          <button
+            onClick={togglePlay}
+            className="w-10 h-10 rounded-full bg-white text-black flex items-center justify-center font-bold"
+          >
+            {isPlaying ? "❚❚" : "▶"}
+          </button>
+
+          {/* NEXT */}
+          <button
+            onClick={nextTrack}
+            className="text-gray-400 hover:text-white text-xl"
+          >
+            <img src={Next} alt="" className="w-6" />
+          </button>
+        </div>
 
         {/* PROGRESS BAR */}
         <div
@@ -57,18 +95,17 @@ const MusicPlayer = () => {
           />
         </div>
 
-          {/* TIME */}
+        {/* TIME */}
         <div className="flex items-center justify-between w-full text-xs text-gray-400">
           <span>{formatTime(currentTime)}</span>
           <span>{formatTime(duration)}</span>
         </div>
-
       </div>
 
       {/* RIGHT (VOLUME) */}
       <div className="w-1/3 flex justify-end items-center gap-3">
         <span className="text-xs text-gray-400">
-            <img src={Speaker} alt="" className="w-5"/>
+          <img src={Speaker} alt="" className="w-5" />
         </span>
 
         <input
@@ -77,9 +114,7 @@ const MusicPlayer = () => {
           max="1"
           step="0.01"
           value={volume}
-          onChange={(e) =>
-            setVolume(Number(e.target.value))
-          }
+          onChange={(e) => setVolume(Number(e.target.value))}
           className="w-24 accent-white cursor-pointer"
         />
       </div>

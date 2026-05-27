@@ -1,6 +1,7 @@
-import { createContext, useContext, useEffect, useRef, useState } from "react";
+import { createContext, useContext, useEffect, useRef, useState, useCallback } from "react";
 
 type Track = {
+  id: number
   title: string;
   artist: string;
   cover: string;
@@ -10,7 +11,7 @@ type Track = {
 type PlayerContextType = {
   currentTrack: Track | null;
   isPlaying: boolean;
-  playTrack: (track: Track) => void;
+  playTrack: (track: Track, tracks?: Track[]) => void;
   togglePlay: () => void;
   currentTime: number;
   duration: number;
@@ -19,6 +20,10 @@ type PlayerContextType = {
 
   volume: number;
   setVolume: (v: number) => void;
+
+  nextTrack: ()=> void
+  prevTrack: ()=> void
+
 };
 
 const PlayerContext = createContext<PlayerContextType | null>(null);
@@ -31,7 +36,28 @@ export const PlayerProvider = ({ children }: { children: React.ReactNode }) => {
   const [isPlaying, setIsPlaying] = useState(false);
   const [volume,setVolume] = useState(1);
 
+  const [queue,setQueue] = useState<Track[]>([])
+  const[currentIndex,setCurrentIndex] = useState(0)
+
   const audioRef = useRef(new Audio());
+
+  const nextTrack = useCallback(()=>{
+  if (queue.length === 0) return;
+
+    const nextIndex =
+      currentIndex === queue.length - 1
+        ? 0
+        : currentIndex + 1;
+
+    const next = queue[nextIndex];
+
+    audioRef.current.src = next.preview;
+    audioRef.current.play();
+
+    setCurrentTrack(next);
+    setCurrentIndex(nextIndex);
+    setIsPlaying(true);
+},[queue,currentIndex])
 
    // stable audio listeners
   useEffect(() => {
@@ -45,18 +71,33 @@ export const PlayerProvider = ({ children }: { children: React.ReactNode }) => {
       setDuration(audio.duration);
     };
 
+    audio.onended = () =>{
+      nextTrack()
+    }
     return () => {
       audio.ontimeupdate = null;
       audio.onloadedmetadata = null;
+      audio.onended = null
     };
-  }, []);
+  }, [nextTrack]);
 
   // volume sync
   useEffect(() => {
     audioRef.current.volume = volume;
   }, [volume]);
 
-  const playTrack = (track: Track) => {
+  const playTrack = (track: Track , tracks?: Track[]) => {
+
+    if (tracks) {
+    setQueue(tracks);
+
+    const index = tracks.findIndex(
+      (t) => t.preview === track.preview
+    );
+
+    setCurrentIndex(index);
+  }
+
     if (currentTrack?.preview !== track.preview) {
       audioRef.current.src = track.preview;
     }
@@ -84,6 +125,27 @@ export const PlayerProvider = ({ children }: { children: React.ReactNode }) => {
   setCurrentTime(time);
 };
 
+
+
+const prevTrack = () =>{
+  if (queue.length === 0) return;
+
+    const prevIndex =
+      currentIndex === 0
+        ? queue.length - 1
+        : currentIndex - 1;
+
+    const prev = queue[prevIndex];
+
+    audioRef.current.src = prev.preview;
+    audioRef.current.play();
+
+    setCurrentTrack(prev);
+    setCurrentIndex(prevIndex);
+    setIsPlaying(true);
+}
+
+
   return (
     <PlayerContext.Provider
       value={{
@@ -95,7 +157,9 @@ export const PlayerProvider = ({ children }: { children: React.ReactNode }) => {
         duration,
         seek,
         volume,
-        setVolume
+        setVolume,
+        nextTrack,
+        prevTrack
       }}
     >
       {children}

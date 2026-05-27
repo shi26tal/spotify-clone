@@ -18,6 +18,7 @@ const AppRoutes = ():JSX.Element => {
             <Route path='library' element={<Library />}></Route>
             <Route path="playlist/:id" element={<Playlist />}></Route>
             <Route path="track/:id" element={<TrackDetails />}></Route>
+            <Route path="playlist/:id" element={<Playlist />}></Route>
         </Route>
 
     </Routes>
