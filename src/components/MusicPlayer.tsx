@@ -1,7 +1,7 @@
 import { usePlayer } from "../context/PlayerContext";
-import Speaker from "../assets/speaker.png";
-import Next from "../assets/next.png"
-import Prev from "../assets/prev.png"
+import { FaPlay, FaPause } from "react-icons/fa";
+import { FaBackwardStep, FaForwardStep } from "react-icons/fa6";
+import { Volume2, Volume1, VolumeX } from "lucide-react";
 
 const MusicPlayer = () => {
   const {
@@ -43,36 +43,33 @@ const MusicPlayer = () => {
 
       {/* CENTER */}
       <div className="flex flex-col items-center w-1/3 gap-2">
-        {/* <button
-          onClick={togglePlay}
-          className="w-10 h-10 rounded-full bg-white text-black flex items-center justify-center font-bold"
-        >
-          {isPlaying ? "❚❚" : "▶"}
-        </button> */}
-
         <div className="flex items-center gap-5">
           {/* PREVIOUS */}
           <button
             onClick={prevTrack}
-            className="text-gray-400 hover:text-white text-xl"
+            disabled={!currentTrack}
+            className="text-gray-400 hover:text-white text-xl disabled:opacity-30 cursor-pointer"
           >
-          <img src={Prev} alt="" className="w-6"/>
+            {/* <img src={Prev} alt="" className="w-6"/> */}
+            <FaBackwardStep size={20} />
           </button>
 
           {/* PLAY / PAUSE */}
           <button
             onClick={togglePlay}
-            className="w-10 h-10 rounded-full bg-white text-black flex items-center justify-center font-bold"
+            className="w-11 h-11 rounded-full bg-white cursor-pointer text-black flex items-center justify-center hover:scale-105 active:scale-95 transition"
           >
-            {isPlaying ? "❚❚" : "▶"}
+            {isPlaying ? <FaPause size={16} /> : <FaPlay size={16} />}
           </button>
 
           {/* NEXT */}
           <button
             onClick={nextTrack}
-            className="text-gray-400 hover:text-white text-xl"
+            disabled={!currentTrack}
+            className="text-gray-400 hover:text-white text-xl disabled:opacity-30 cursor-pointer"
           >
-            <img src={Next} alt="" className="w-6" />
+            {/* <img src={Next} alt="" className="w-6" /> */}
+            <FaForwardStep size={22} />
           </button>
         </div>
 
@@ -104,9 +101,13 @@ const MusicPlayer = () => {
 
       {/* RIGHT (VOLUME) */}
       <div className="w-1/3 flex justify-end items-center gap-3">
-        <span className="text-xs text-gray-400">
-          <img src={Speaker} alt="" className="w-5" />
-        </span>
+        {volume === 0 ? (
+          <VolumeX size={22} />
+        ) : volume < 0.5 ? (
+          <Volume1 size={22} />
+        ) : (
+          <Volume2 size={22} />
+        )}
 
         <input
           type="range"

@@ -6,6 +6,7 @@ import Library from "../pages/Library";
 import type { JSX } from "react";
 import Playlist from "../pages/Playlist";
 import TrackDetails from "../pages/TrackDetails";
+import LikedSongs from "../pages/LikedSongs";
 
 const AppRoutes = (): JSX.Element => {
   return (
@@ -17,6 +18,7 @@ const AppRoutes = (): JSX.Element => {
         <Route path="playlist/:id" element={<Playlist />}></Route>
         <Route path="track/:id" element={<TrackDetails />}></Route>
         <Route path="playlist/:id" element={<Playlist />}></Route>
+        <Route path="liked-songs" element={<LikedSongs />}></Route>
       </Route>
     </Routes>
   );

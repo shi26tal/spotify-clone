@@ -30,7 +30,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen}: SidebarProps):JSX.Element => {
         onClick={toggleSidebar}
       >
         <img src={menu} className="h-5" />
-        {sidebarOpen && <span>Menu</span>}
+        {sidebarOpen}
       </div>
 
       {/* HOME */}
@@ -47,14 +47,14 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen}: SidebarProps):JSX.Element => {
 
       {/* LIBRARY */}
       {sidebarOpen && (
-        <div className="mt-6">
+        <div className="mt-6 flex flex-col gap-2">
           <NavLink to='library' className="text-white font-semibold"><span className='mb-3'>Library</span></NavLink>
+          <NavLink to='liked-songs' className="hover:text-white text-sm font-medium"><span className='mb-3'>Liked Songs</span></NavLink>
 
-          <div className="flex flex-col gap-2 text-sm">
+          {/* <div className="flex flex-col gap-2 mt-2 text-sm">
             <p className="hover:text-white cursor-pointer">Liked Songs</p>
             <p className="hover:text-white cursor-pointer">Recently Played</p>
-            <p className="hover:text-white cursor-pointer">Your Episodes</p>
-          </div>
+          </div> */}
         </div>
       )}
 

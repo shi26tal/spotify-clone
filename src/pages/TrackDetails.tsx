@@ -2,6 +2,9 @@ import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { getTrack } from "../api/music";
 import { usePlayer } from "../context/PlayerContext";
+import { useMusic } from "../context/MusicContext";
+import { Heart } from "lucide-react";
+import { FaPlay , FaPause } from "react-icons/fa";
 
 type Track = {
   id: number;
@@ -24,7 +27,8 @@ const TrackDetails = () => {
 
   const [track, setTrack] = useState<Track | null>(null);
   const [loading, setLoading] = useState(true);
-  const { playTrack, togglePlay, currentTrack , isPlaying } = usePlayer();
+  const { playTrack, togglePlay, currentTrack, isPlaying } = usePlayer();
+  const { toggleLike, isLiked } = useMusic();
 
   useEffect(() => {
     const fetchTrack = async () => {
@@ -50,6 +54,17 @@ const TrackDetails = () => {
   }
 
   const isCurrentTrack = currentTrack?.preview === track.preview;
+
+  const song = track
+    ? {
+        id: track.id,
+        title: track.title,
+        artist: track.artist.name,
+        albumCover: track.album.cover_big,
+        duration: track.duration,
+        preview: track.preview,
+      }
+    : null;
 
   return (
     <div className="min-h-screen text-white bg-gradient-to-b from-[#5038a0] via-[#181818] to-black">
@@ -93,25 +108,37 @@ const TrackDetails = () => {
           {/* PLAY BUTTON */}
           <button
             onClick={() => {
-              if(isCurrentTrack){
+              if (isCurrentTrack) {
                 togglePlay();
-              }else{
-              playTrack({
-                id: track.id,
-                title: track.title,
-                artist: track.artist.name,
-                cover: track.album.cover_big,
-                preview: track.preview,
-              });
-            }
+              } else {
+                playTrack({
+                  id: track.id,
+                  title: track.title,
+                  artist: track.artist.name,
+                  cover: track.album.cover_big,
+                  preview: track.preview,
+                });
+              }
             }}
-            className="w-14 h-14 rounded-full bg-[#1ed760] hover:brightness-110 hover:scale-105 active:scale-95 transition flex items-center justify-center text-black text-2xl font-bold"
+            className="w-14 h-14 rounded-full bg-[#1ed760] cursor-pointer hover:brightness-110 hover:scale-105 active:scale-95 transition flex items-center justify-center text-black text-2xl font-bold"
           >
-            {isCurrentTrack && isPlaying ? "❚❚" : "▶"}
+            {isCurrentTrack && isPlaying ? <FaPause size={18}/> : <FaPlay size={18}/>}
           </button>
 
           {/* LIKE */}
-          <button className="text-3xl text-gray-400 hover:text-white">♡</button>
+          <button
+            onClick={() => song && toggleLike(song)}
+            className="text-3xl hover:text-white transition cursor-pointer"
+          >
+            <Heart
+              size={28}
+              className={`transition transform hover:scale-110 ${
+                song && isLiked(song.id)
+                  ? "fill-green-500 text-green-500"
+                  : "text-white hover:text-green-400"
+              }`}
+            />
+          </button>
         </div>
 
         {/* AUDIO */}

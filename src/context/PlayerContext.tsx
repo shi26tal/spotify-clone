@@ -30,10 +30,12 @@ const PlayerContext = createContext<PlayerContextType | null>(null);
 
 export const PlayerProvider = ({ children }: { children: React.ReactNode }) => {
   const [currentTrack, setCurrentTrack] = useState<Track | null>(null);
+
   const [currentTime, setCurrentTime] = useState(0);
   const [duration, setDuration] = useState(0);
 
   const [isPlaying, setIsPlaying] = useState(false);
+
   const [volume,setVolume] = useState(1);
 
   const [queue,setQueue] = useState<Track[]>([])
@@ -88,17 +90,26 @@ export const PlayerProvider = ({ children }: { children: React.ReactNode }) => {
 
   const playTrack = (track: Track , tracks?: Track[]) => {
 
-    if (tracks) {
+    //if playlist provided
+
+    if (tracks && tracks.length > 0) {
     setQueue(tracks);
 
+    // const index = tracks.findIndex(
+    //   (t) => t.preview === track.preview
+    // );
     const index = tracks.findIndex(
-      (t) => t.preview === track.preview
+      (t) => t.id === track.id
     );
-
     setCurrentIndex(index);
   }
 
-    if (currentTrack?.preview !== track.preview) {
+    // if (currentTrack?.preview !== track.preview) {
+    //   audioRef.current.src = track.preview;
+    // }
+
+    //change source only if different
+    if(audioRef.current.src !== track.preview){
       audioRef.current.src = track.preview;
     }
 
@@ -127,7 +138,7 @@ export const PlayerProvider = ({ children }: { children: React.ReactNode }) => {
 
 
 
-const prevTrack = () =>{
+const prevTrack = useCallback(() =>{
   if (queue.length === 0) return;
 
     const prevIndex =
@@ -143,7 +154,7 @@ const prevTrack = () =>{
     setCurrentTrack(prev);
     setCurrentIndex(prevIndex);
     setIsPlaying(true);
-}
+},[queue,currentIndex])
 
 
   return (
