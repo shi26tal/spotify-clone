@@ -1,5 +1,8 @@
 // const BASE_URL = "https://api.deezer.com";
-const BASE_URL = "https://corsproxy.io/?https://api.deezer.com";
+const BASE_URL =
+  import.meta.env.DEV
+    ? "https://corsproxy.io/?https://api.deezer.com"
+    : "/api/deezer";
 
 /* HOME / TRENDING */
 export const getChart = async () => {
