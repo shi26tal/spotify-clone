@@ -3,12 +3,12 @@ const BASE_URL = "/api/deezer";
 
 /* HOME / TRENDING */
 export const getChart = async () => {
-  const res = await fetch(`${BASE_URL}/chart`);
+  const res = await fetch(`${BASE_URL}/chart/0`);
   return res.json();
 };
 
 export const getPlaylistTracksFromChart = async () => {
-  const chartRes = await fetch(`${BASE_URL}/chart`);
+  const chartRes = await fetch(`${BASE_URL}/chart/0`);
   const chart = await chartRes.json();
 
   console.log("CHART DATA:", chart);
