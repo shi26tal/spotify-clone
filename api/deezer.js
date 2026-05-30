@@ -1,6 +1,8 @@
 export default async function handler(req, res) {
   try {
-    const url = `https://api.deezer.com${req.url.replace("/api/deezer", "")}`;
+    const path = req.url.replace("/api/deezer", "");
+
+    const url = `https://api.deezer.com${path}`;
 
     const response = await fetch(url);
     const data = await response.text();
