@@ -1,29 +1,21 @@
 export default async function handler(req, res) {
   try {
-    const { path = [] } = req.query;
+    const { path } = req.query;
 
-    const pathString = Array.isArray(path)
+    const deezerPath = Array.isArray(path)
       ? path.join("/")
       : path;
 
-    const url = new URL(`https://api.deezer.com/${pathString}`);
+    const url = `https://api.deezer.com/${deezerPath}${
+      req.url.includes("?") ? req.url.slice(req.url.indexOf("?")) : ""
+    }`;
 
-    Object.entries(req.query).forEach(([key, value]) => {
-      if (key !== "path") {
-        url.searchParams.append(key, value);
-      }
-    });
-
-    const response = await fetch(url.toString());
+    const response = await fetch(url);
     const data = await response.text();
 
     res.setHeader("Access-Control-Allow-Origin", "*");
     res.status(response.status).send(data);
-  } catch (error) {
-    console.error(error);
-
-    res.status(500).json({
-      error: "Failed to fetch Deezer API",
-    });
+  } catch (err) {
+    res.status(500).json({ error: "Proxy failed" });
   }
 }
