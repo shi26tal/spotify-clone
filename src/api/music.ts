@@ -11,7 +11,11 @@ export const getPlaylistTracksFromChart = async () => {
   const chartRes = await fetch(`${BASE_URL}/chart`);
   const chart = await chartRes.json();
 
+  console.log("CHART DATA:", chart);
+
   const playlistId = chart?.playlists?.data?.[0]?.id;
+
+
 
   if (!playlistId) {
     throw new Error("No playlist found in chart");
