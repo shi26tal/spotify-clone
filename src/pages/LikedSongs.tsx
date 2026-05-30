@@ -12,6 +12,17 @@ const LikedSongs = () => {
   const { likedSongs, toggleLike, isLiked } = useMusic();
   const { playTrack, currentTrack } = usePlayer();
 
+  const safeQueue = likedSongs
+    .filter((s) => s.preview)
+    .map((s) => ({
+      id: s.id,
+      title: s.title,
+      artist: s.artist,
+      cover: s.albumCover,
+      preview: s.preview,
+      duration : s.duration
+    }));
+
   return (
     <div className="p-6 text-white min-h-screen bg-gradient-to-b from-[#121212] to-black">
       {/* HEADER */}
@@ -27,6 +38,9 @@ const LikedSongs = () => {
               <div
                 key={song.id}
                 onClick={() =>
+                {
+                  if(!song.preview) return;
+
                   playTrack(
                     {
                       id: song.id,
@@ -34,16 +48,11 @@ const LikedSongs = () => {
                       artist: song.artist,
                       cover: song.albumCover,
                       preview: song.preview,
+                      
                     },
-                    likedSongs.map((s) => ({
-                      id: s.id,
-                      title: s.title,
-                      artist: s.artist,
-                      cover: s.albumCover,
-                      preview: s.preview,
-                    })),
+                    safeQueue
                   )
-                }
+                }}
                 className={`flex items-center justify-between p-3 rounded-lg cursor-pointer transition ${
                   isActive
                     ? "bg-[#5a5a5a]/80 border-l-4 border-[#1ed760]/70"

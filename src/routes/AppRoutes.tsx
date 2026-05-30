@@ -7,6 +7,7 @@ import type { JSX } from "react";
 import Playlist from "../pages/Playlist";
 import TrackDetails from "../pages/TrackDetails";
 import LikedSongs from "../pages/LikedSongs";
+import ArtistPage from "../pages/ArtistPage";
 
 const AppRoutes = (): JSX.Element => {
   return (
@@ -19,6 +20,7 @@ const AppRoutes = (): JSX.Element => {
         <Route path="track/:id" element={<TrackDetails />}></Route>
         <Route path="playlist/:id" element={<Playlist />}></Route>
         <Route path="liked-songs" element={<LikedSongs />}></Route>
+        <Route path="artist/:id" element={<ArtistPage />}></Route>
       </Route>
     </Routes>
   );

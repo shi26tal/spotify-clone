@@ -1,5 +1,6 @@
 import { createContext, useContext, useEffect, useState } from "react";
 
+
 export type Song = {
   id: number;
   title: string;
@@ -20,7 +21,17 @@ const MusicContext = createContext<MusicContextType | null>(null);
 export const MusicProvider = ({ children }: { children: React.ReactNode }) => {
   const [likedSongs, setLikedSongs] = useState<Song[]>(() => {
     const saved = localStorage.getItem("likedSongs");
-    return saved ? JSON.parse(saved) : [];
+    if(!saved) return [];
+
+    try{
+      const parsed = JSON.parse(saved);
+      return parsed.filter(
+        (song: Song) => song?.preview && song?.id 
+      );
+    }catch{
+      return [];
+    }
+    //return saved ? JSON.parse(saved) : [];
   });
 
   useEffect(() => {

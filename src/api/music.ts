@@ -31,8 +31,7 @@ export const searchTracks = async (query: string) => {
   if (!res.ok) {
     throw new Error("Failed to fetch");
   }
-
-  return res.json();
+return res.json(); 
 };
 
 /* ARTIST */
@@ -40,6 +39,13 @@ export const getArtist = async (id: string) => {
   const res = await fetch(`${BASE_URL}/artist/${id}`);
   return res.json();
 };
+
+// artist top tracks
+export const getArtistTopTracks = async (id:string) => {
+  const res = await fetch (`${BASE_URL}/artist/${id}/top?limit=50`)
+
+  return res.json();
+}
 
 /* ALBUM */
 export const getAlbum = async (id: string) => {

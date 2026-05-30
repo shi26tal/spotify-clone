@@ -1,17 +1,16 @@
-import { useMusic } from "../context/MusicContext"
-import { usePlayer } from "../context/PlayerContext"
+
 
 const Library = () => {
 
-  const {likedSongs} = useMusic()
-  const {playTrack} = usePlayer()
+  // const {likedSongs} = useMusic()
+  // const {playTrack} = usePlayer()
 
   return (
     <div className="p-6 text-white">
       <h1 className="text-3xl font-bold mb-6">Your Library</h1>
 
       {/* Liked Songs */}
-      <div>
+      {/* <div>
         <h2 className="text-xl font-semibold mb-4">Liked Songs</h2>
 
         {likedSongs.length === 0 ? (
@@ -40,7 +39,7 @@ const Library = () => {
             ))}
           </div>
         )}
-      </div>
+      </div> */}
     </div>
   )
 }
